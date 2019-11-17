@@ -47,33 +47,36 @@ def add_cpu():
 
     return render_template('add_cpu.html', form=form, pageTitle='Add A New CPU')
 
-@app.route('/delete_cpu/<int:cpu_id>', methods=['GET','POST'])
+@app.route('/cpu/<int:cpu_id>/delete', methods=['POST'])
 def delete_cpu(cpu_id):
-    if request.method == 'POST': #if it's a POST request, delete the cpu from the database
-        obj = ndeal_cpu.query.filter_by(cpu_id=cpu_id).first()
-        db.session.delete(obj)
+    if request.method == 'POST': #if it's a POST request, delete the friend from the database
+        cpu = ndeal_cpu.query.get_or_404(cpu_id)
+        db.session.delete(cpu)
         db.session.commit()
         flash('CPU was successfully deleted!')
         return redirect("/")
-
-@app.route('/update_cpu/<int:cpu_id>', methods=['GET','POST'])
-def update_cpu(cpu_id):
-    if request.method == 'POST': 
-        obj = ndeal_cpu.query.filter_by(cpu_id=cpu_id).first()
-        db.session.update(obj)
-        db.session.commit()
-        flash('CPU was successfully updated!')
-        return redirect("/")
-
-
     else: #if it's a GET request, send them to the home page
         return redirect("/")
 
+@app.route('/cpu/<int:cpu_id>', methods=['GET','POST'])
+def cpu(cpu_id):
+    cpu = ndeal_cpu.query.get_or_404(cpu_id)
+    return render_template('cpu.html', form=cpu, pageTitle='CPU Details')
 
-
-
-
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/cpu/<int:cpu_id>/update', methods=['GET','POST'])
+def update_cpu(cpu_id):
+    cpu = ndeal_cpu.query.get_or_404(cpu_id)
+    form = cpuForm()
+    if form.validate_on_submit():
+        cpu.cpu_name = form.cpu_name.data
+        cpu.cores = form.cores.data
+        cpu.clock = form.clock.data
+        db.session.commit()
+        flash('Your CPU has been updated.')
+        return redirect(url_for('cpu', cpu_id=cpu.cpuid))
+    #elif request.method == 'GET':
+    form.cpu_name.data = cpu.cpu_name
+    form.cores.data = friend.cores
+    form.clock.data = friend.clock
+    return render_template('add_cpu.html', form=form, pageTitle='Update Post',
+                            legend="Update A CPU")
