@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>{{ pageTitle }}</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style>
+#flash { display:none; background-color:white; color:red}
+</style>
+
+<script>
+    $(function() {
+   $('#flash').delay(500).fadeIn('normal', function() {
+      $(this).delay(2500).fadeOut();
+   });
+});
+</script>
+
+</head>
+
+  <body>
+      <h1> AMD CPUs </h1>
+      <hr>
+
+      {% block body %}
+
+	  {% endblock %}
+
+ </body>
+
+</html>

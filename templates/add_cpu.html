@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block body %}
+<div>
+
+  <h3>Add A New CPU</h3>
+
+  <form method="POST" action="{{ url_for('add_cpu') }}">
+
+    {{ form.csrf_token }}
+    {{ form.cpu_name.label }} {{ form.cpu_name(size=20) }}
+    {{ form.cores.label }} {{ form.cores(size=20) }}
+    {{ form.clock.label }} {{ form.clock(size=20) }}
+
+    <input type="submit" value="Add CPU">
+
+  </form>
+
+</div>
+{% endblock %}
