@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, redirect, request, flash
 from flask_wtf import FlaskForm
-from wtforms import StringField
+from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
@@ -26,6 +26,7 @@ class ndeal_cpu(db.Model):
         return "id: {0} | cpu name: {1} | cores: {2} | clock: {3}".format(self.id, self.cpu_name, self.cores, self.clock)
 
 class CPUform(FlaskForm):
+    cpu_id = IntegerField('CPU ID:')
     cpu_name = StringField('cpu name:', validators=[DataRequired()])
     cores = StringField('cores:', validators=[DataRequired()])
     clock = StringField('clock:', validators=[DataRequired()])
@@ -66,17 +67,17 @@ def cpu(cpu_id):
 @app.route('/cpu/<int:cpu_id>/update', methods=['GET','POST'])
 def update_cpu(cpu_id):
     cpu = ndeal_cpu.query.get_or_404(cpu_id)
-    form = cpuForm()
+    form = CPUform()
     if form.validate_on_submit():
         cpu.cpu_name = form.cpu_name.data
         cpu.cores = form.cores.data
         cpu.clock = form.clock.data
         db.session.commit()
         flash('Your CPU has been updated.')
-        return redirect(url_for('cpu', cpu_id=cpu.cpuid))
+        return redirect("/")
     #elif request.method == 'GET':
     form.cpu_name.data = cpu.cpu_name
-    form.cores.data = friend.cores
-    form.clock.data = friend.clock
-    return render_template('add_cpu.html', form=form, pageTitle='Update Post',
+    form.cores.data = cpu.cores
+    form.clock.data = cpu.clock
+    return render_template('update_cpu.html', form=form, pageTitle='Update CPU',
                             legend="Update A CPU")
