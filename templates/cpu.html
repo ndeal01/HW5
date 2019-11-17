@@ -1,0 +1,39 @@
+
+{% extends 'base.html' %}
+{% block body %}
+<div>
+<p><a href="{{ url_for('index')}}"> Home </a></p>
+<h3>{{ legend }}</h3>
+
+{% with messages = get_flashed_messages() %}
+ {% if messages %}
+ <div class="alert alert-warning alert-dismissible fade show" role="alert" id="flash">
+   {% for message in messages %}
+   <strong>Alert!</strong> {{ message }}
+   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+   </button>
+   {% endfor %}
+   {% endif %}
+   {% endwith %}
+ </div>
+
+
+{% if form %}
+<form method="POST">
+
+  {{ form.csrf_token }}
+
+  {{ form.cpu_name.label }} {{ form.first_name }}
+  {{ form.cores.label }} {{ form.cores }}
+  {{ form.clock.label }} {{ form.clock }}
+
+  <input type="submit" formaction="{{url_for('update_cpu', cpu_id=form.cpu_id)}}" value="Update">
+  <input type="submit" formaction="{{url_for('delete_cpu', cpu_id=form.cpu_id)}}" value="Delete">
+
+
+
+</form>
+{% endif %}
+</div>
+{% endblock %}
