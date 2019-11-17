@@ -44,6 +44,17 @@ def index():
     all_cpus = ndeal_cpu.query.all()
     return render_template('index.html', cpu=all_cpus, pageTitle='AMD CPUs')
 
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        form = request.form
+        search_value = form['search_string']
+        search = "%{}%".format(search_value)
+        results = ndeal_cpu.query.filter(ndeal_cpu.cpu_name.like(search)).all()
+        return render_template('index.html', cpu=results, pageTitle='AMD CPUs', legend="Search Results")
+    else:
+        return redirect('/')
+
 @app.route('/add_cpu', methods=['GET', 'POST'])
 def add_cpu():
     form = CPUform()

@@ -3,6 +3,12 @@
 {% extends 'base.html' %}
 
 {% block body %}
+
+<form method="POST">
+    <input type="text" autofocus="autofocus" name="search_string">
+    <input type="submit" formaction="/search" value="Search">
+</form>
+
 <p><a href="{{ url_for('.add_cpu')}}"> Add a New CPU</a></p>
 
 {% with messages = get_flashed_messages() %}
